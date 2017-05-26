@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Fexco - Eircode</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<script type="text/javascript" th:src="@{/js/angular.min.js}"></script>
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+
+<body ng-app="webappFexco">
+
+	<div class="container-fluid" ng-controller="eirController">
+		
+		<p>Eircode Search</p>
+		
+		<form class="simple-form">
+			<label>Eircode:</label> <input type="text" ng-model="eircode" />
+			
+			<label>Dataset:</label> 
+			<select name="dataset" ng-model="dataset" >
+				<option value="uk" selected="selected">UK</option>
+				<option value="ie">IE</option>
+			</select>
+			
+			<br/>
+			
+			<input type="button" ng-click="reset()" value="Reset" />
+			<input	type="submit" ng-click="searchEirCode(dataset, eircode)" value="Search" />
+		</form>
+		
+		<hr />
+		
+		<div ng-show="eirResponse[0].errorMessage">
+			Error: {{ eirResponse[0].errorMessage }}
+		</div>
+		
+		<table ng-show="eirResponse[0].postcode" class="table-striped">
+			<thead>
+				<tr>
+					<th>address line 1</th>
+					<th>address line 2</th>
+					<th>summary line</th>
+					<th>organisation</th>
+					<th>street</th>
+					<th>posttown</th>
+					<th>county</th>
+					<th>postcode</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="row in eirResponse">
+					<td>{{ row.addressline1 }}</td>
+					<td>{{ row.addressline2 }}</td>
+					<td>{{ row.summaryline }}</td>
+					<td>{{ row.organisation }}</td>
+					<td>{{ row.street }}</td>
+					<td>{{ row.posttown }}</td>
+					<td>{{ row.county }}</td>
+					<td>{{ row.postcode }}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+	</div>
+
+	<script>
+		angular.module("webappFexco", []).controller( "eirController", function($scope, $http) {
+			
+			$scope.searchEirCode = function(dataset, eircode) {
+				$scope.eirResponse = '';
+				
+				var parameters = {ds:dataset,ec:eircode};
+				$url = "/webapp/search_eircode";
+				$http.get($url, {params:parameters}).then(
+					function(response) {
+						$scope.eirResponse = response.data;
+					}
+				);
+		    }
+			
+			$scope.reset = function() {
+					$scope.eircode = '';
+					$scope.eirResponse = '';
+				};
+			});
+	</script>
+
+</body>
+</html>
