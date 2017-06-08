@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Fexco - Eircode</title>
+<title>Application - Eircode</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<script type="text/javascript" th:src="@{/js/angular.min.js}"></script>
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 </head>
 
-<body ng-app="webappFexco">
+<body ng-app="webappAppEircode">
 
 	<div class="container-fluid" ng-controller="eirController">
 		
@@ -32,6 +32,9 @@
 		
 		<div ng-show="eirResponse[0].errorMessage">
 			Error: {{ eirResponse[0].errorMessage }}
+		</div>
+		<div ng-show="eirResponse[0].alertMessage">
+			Alert: {{ eirResponse[0].alertMessage }}
 		</div>
 		
 		<table ng-show="eirResponse[0].postcode" class="table-striped">
@@ -64,13 +67,13 @@
 	</div>
 
 	<script>
-		angular.module("webappFexco", []).controller( "eirController", function($scope, $http) {
+		angular.module("webappAppEircode", []).controller( "eirController", function($scope, $http) {
 			
 			$scope.searchEirCode = function(dataset, eircode) {
 				$scope.eirResponse = '';
 				
 				var parameters = {ds:dataset,ec:eircode};
-				$url = "/webapp/search_eircode";
+				$url = "/webapp/eircode/search";
 				$http.get($url, {params:parameters}).then(
 					function(response) {
 						$scope.eirResponse = response.data;

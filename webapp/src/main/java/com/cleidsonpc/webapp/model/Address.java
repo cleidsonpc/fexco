@@ -1,4 +1,4 @@
-package com.fexco.webapp.model;
+package com.cleidsonpc.webapp.model;
 
 public class Address {
 
@@ -16,6 +16,7 @@ public class Address {
 	private String postcode;
 
 	private String errorMessage;
+	private String alertMessage;
 
 	@Override
 	public String toString() {
@@ -124,6 +125,14 @@ public class Address {
 
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
+	}
+
+	public String getAlertMessage() {
+		return alertMessage;
+	}
+
+	public void setAlertMessage(String alertMessage) {
+		this.alertMessage = alertMessage;
 	}
 
 }
