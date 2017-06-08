@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.StringUtils;
 
-import com.cleidsonpc.webapp.model.Address;
-import com.cleidsonpc.webapp.service.EirCodeSearchService;
+import com.cleidsonpc.webapp.service.EircodeSearchService;
+import com.cleidsonpc.webapp.service.EircodeServiceResponse;
 
 /**
  * Class responsible for control the web application.
@@ -24,7 +24,7 @@ public class HomeController {
 	private static final Logger LOG = Logger.getLogger(HomeController.class);
 	
 	@Autowired
-	private EirCodeSearchService eirCodeSearchService;
+	private EircodeSearchService eirCodeSearchService;
 	
 	/**
 	 * Method responsible for open the main page.
@@ -40,27 +40,24 @@ public class HomeController {
 	 * Make the link to call the web service to retrieve the address of the eircode
 	 * @param dataset - ({@link String})
 	 * @param eircode - ({@link String})
-	 * @return The same answer of the {@link EirCodeSearchService#searchEirCode(String)}
+	 * @return The same answer of the {@link EircodeSearchService#searchEirCode(String)}
 	 */
 	@ResponseBody
 	@RequestMapping(value="/eircode/search", produces=MediaType.APPLICATION_JSON_VALUE, method=RequestMethod.GET)
-	public Address[] searchEirCode(@RequestParam("ds") String dataset, @RequestParam("ec") String eircode) {
-		Address[] response = null;
+	public EircodeServiceResponse searchEirCode(@RequestParam("ds") String dataset, @RequestParam("ec") String eircode) {
+		EircodeServiceResponse response = new EircodeServiceResponse();
 		
 		if(StringUtils.isEmpty(eircode) || "undefined".equals(eircode)) {
-			LOG.info("Eircode is invalid");
-			
-			Address addr = new Address();
-			addr.setErrorMessage("Eircode is invalid");
-			response = new Address[]{addr};
+			LOG.debug("Eircode is invalid");
+			response.setErrorMessage("Eircode is invalid");
 			
 		} else {
-			LOG.info("Home.searchEirCode called.");
+			LOG.debug("Home.searchEirCode called.");
 			
-			LOG.info("It will seek the eircode.");
+			LOG.debug("It will seek the eircode.");
 			response = eirCodeSearchService.searchEirCode(dataset, eircode); // Call the EirCodeSearch service.
 			
-			LOG.info("Response: " + response);
+			LOG.debug("Response: " + response);
 		}
 		
 		return response;

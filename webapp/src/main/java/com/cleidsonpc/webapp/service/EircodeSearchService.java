@@ -12,16 +12,19 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 /**
  * Class responsible for do the communication between the web application and external web service.
+ * Documentation.
+ * 	https://developers.alliescomputing.com/postcoder-web-api/address-lookup/eircode
+ * 	https://developers.alliescomputing.com/postcoder-web-api/address-lookup/premise
  */
 @Service
-public class EirCodeSearchService {
-	private static final Logger LOG = Logger.getLogger(EirCodeSearchService.class);
+public class EircodeSearchService {
+	private static final Logger LOG = Logger.getLogger(EircodeSearchService.class);
 	private final static RestTemplate restTemplate = new RestTemplate();
 	
 	@Value("${cleidsonpc.ws.id}")
     private String wsId;
 	
-	private static final String URL_EIR_CODE_SERVICE = "http://ws.postcoder.com/pcw/%s/address/%s/%s?format=json&lines=3";
+	private static final String URL_EIR_CODE_SERVICE = "http://ws.postcoder.com/pcw/%s/street/%s/%s?format=json&lines=3";
 	
 	/**
 	 * Main method to call the web service (ws.postcoder.com) and retrieve the address by eircode.
@@ -31,17 +34,18 @@ public class EirCodeSearchService {
 	 */
 	@Cacheable("eirCodeCache") // Avoids unnecessary calls to eirCode web service
 	@HystrixCommand(fallbackMethod="errorService")
-	public Address[] searchEirCode(String dataset, String eircode) {
+	public EircodeServiceResponse searchEirCode(String dataset, String eircode) {
 		
-		LOG.info("EirCodeSearch.searchEirCode called.");
+		LOG.debug("EirCodeSearch.searchEirCode called.");
+		
+		EircodeServiceResponse response = new EircodeServiceResponse();
 		
 		String newEirCodeURL = String.format(URL_EIR_CODE_SERVICE, wsId, dataset, eircode); // Build the URL to the web service of search.
-        Address[] response = restTemplate.getForObject(newEirCodeURL, Address[].class); // Call the ws.postcoder.com web service.
-		
-        if(response.length == 0) {
-        	Address addr = new Address();
-			addr.setAlertMessage("Nothing was returned, try again.");
-			response = new Address[]{addr};
+        Address[] wsRes = restTemplate.getForObject(newEirCodeURL, Address[].class); // Call the ws.postcoder.com web service.
+		response.setAddressList(wsRes);
+        
+        if(wsRes.length == 0) {
+			response.setAlertMessage("Nothing was returned, try again.");
         }
         
 		return response;
@@ -50,13 +54,13 @@ public class EirCodeSearchService {
 	/**
 	 * Method called if the link to the web service ws.postcoder.com is broken.
 	 */
-	public Address[] errorService(@RequestParam("ds") String dataset, @RequestParam("ec") String eircode, Throwable t) {
+	public EircodeServiceResponse errorService(@RequestParam("ds") String dataset, @RequestParam("ec") String eircode, Throwable t) {
 		LOG.error("Hystrix fallbackMethod: " + t.getMessage());
 		
-		Address addr = new Address();
-		addr.setErrorMessage("The web service ws.postcoder.com is broken");
+		EircodeServiceResponse response = new EircodeServiceResponse();
+		response.setErrorMessage("The web service ws.postcoder.com is broken");
 		
-		return new Address[]{addr};
+		return response;
 	}
 	
 }

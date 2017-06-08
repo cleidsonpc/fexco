@@ -30,14 +30,17 @@
 		
 		<hr />
 		
-		<div ng-show="eirResponse[0].errorMessage">
-			Error: {{ eirResponse[0].errorMessage }}
+		<div ng-show="eirResponse.errorMessage" style="background-color: red;">
+			Error: {{ eirResponse.errorMessage }}
 		</div>
-		<div ng-show="eirResponse[0].alertMessage">
-			Alert: {{ eirResponse[0].alertMessage }}
+		<div ng-show="eirResponse.alertMessage" style="background-color: yellow;">
+			Alert: {{ eirResponse.alertMessage }}
+		</div>
+		<div ng-show="eirResponse.addressList[0].postcode" style="background-color: cyan">
+			Note: These results are based around the NR14 7PZ postcode when using the example API key (PCW45-12345-12345-1234X).
 		</div>
 		
-		<table ng-show="eirResponse[0].postcode" class="table-striped">
+		<table ng-show="eirResponse.addressList[0].postcode" class="table-striped">
 			<thead>
 				<tr>
 					<th>address line 1</th>
@@ -51,7 +54,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="row in eirResponse">
+				<tr ng-repeat="row in eirResponse.addressList">
 					<td>{{ row.addressline1 }}</td>
 					<td>{{ row.addressline2 }}</td>
 					<td>{{ row.summaryline }}</td>
