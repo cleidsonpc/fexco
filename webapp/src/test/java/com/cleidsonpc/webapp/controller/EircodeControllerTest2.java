@@ -8,24 +8,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-import com.cleidsonpc.webapp.controller.HomeController;
+import com.cleidsonpc.webapp.WebappApplication;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = WebappApplication.class)
 @WebAppConfiguration
-public class HomeControllerTest {
+public class EircodeControllerTest2 {
 
 	private MockMvc mockMvc;
 	
+	@Autowired
+    private WebApplicationContext webApplicationContext;
+	
+	
 	@Before
 	public void before() {
-		MockitoAnnotations.initMocks(this);
-	    this.mockMvc = MockMvcBuilders.standaloneSetup(this).setControllerAdvice(new HomeController()).build();
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
 	
 	@Test
@@ -36,7 +42,7 @@ public class HomeControllerTest {
 	
 	@Test
 	public void testEirCodeSearch() throws Exception {
-		mockMvc.perform(get("http://localhost:8080/webapp/searchEirCode?ec=NR147PZ"))
+		mockMvc.perform(get("http://localhost:8080/webapp/search_eircode?ec=NR147PZ"))
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$[0].addressline1", is("Allies Computing Ltd")))
 		.andExpect(jsonPath("$[0].addressline2", is("Manor Farm Barns, Fox Road")))

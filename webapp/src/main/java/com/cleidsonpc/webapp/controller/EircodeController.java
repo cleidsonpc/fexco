@@ -15,36 +15,30 @@ import com.cleidsonpc.webapp.service.EircodeSearchService;
 import com.cleidsonpc.webapp.service.EircodeServiceResponse;
 
 /**
- * Class responsible for control the web application.
+ * Class responsible for control the information about eircode search.
  */
 @Controller
-@RequestMapping("/webapp")
-public class HomeController {
+@RequestMapping(value="/webapp/eircode")
+public class EircodeController {
 
-	private static final Logger LOG = Logger.getLogger(HomeController.class);
+	private static final Logger LOG = Logger.getLogger(EircodeController.class);
 	
 	@Autowired
 	private EircodeSearchService eirCodeSearchService;
 	
-	/**
-	 * Method responsible for open the main page.
-	 * @param model - ({@link Model}) 
-	 * @return The name of the page in the folder <b>"resources/templates"</b>
-	 */
-	@RequestMapping("/home")
-	public String home(Model model) {        
-        return "home_page";
+	@RequestMapping("/*")
+	public String page(Model model) {        
+        return "eircode_page";
 	}
 	
 	/**
-	 * Make the link to call the web service to retrieve the address of the eircode
-	 * @param dataset - ({@link String})
+	 * Make the link to call the web service to retrieve the address of the eircode.
 	 * @param eircode - ({@link String})
 	 * @return The same answer of the {@link EircodeSearchService#searchEirCode(String)}
 	 */
 	@ResponseBody
-	@RequestMapping(value="/eircode/search", produces=MediaType.APPLICATION_JSON_VALUE, method=RequestMethod.GET)
-	public EircodeServiceResponse searchEirCode(@RequestParam("ds") String dataset, @RequestParam("ec") String eircode) {
+	@RequestMapping(value="/find", produces=MediaType.APPLICATION_JSON_VALUE, method=RequestMethod.GET)
+	public EircodeServiceResponse searchEirCode(@RequestParam("ec") String eircode) {
 		EircodeServiceResponse response = new EircodeServiceResponse();
 		
 		if(StringUtils.isEmpty(eircode) || "undefined".equals(eircode)) {
@@ -55,7 +49,7 @@ public class HomeController {
 			LOG.debug("Home.searchEirCode called.");
 			
 			LOG.debug("It will seek the eircode.");
-			response = eirCodeSearchService.searchEirCode(dataset, eircode); // Call the EirCodeSearch service.
+			response = eirCodeSearchService.searchEirCode(eircode); // Call the EirCodeSearch service.
 			
 			LOG.debug("Response: " + response);
 		}

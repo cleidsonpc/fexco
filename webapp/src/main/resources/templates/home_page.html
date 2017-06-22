@@ -1,95 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Application - Eircode</title>
+<title>Application - Home</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<script type="text/javascript" th:src="@{/js/angular.min.js}"></script>
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 </head>
 
-<body ng-app="webappAppEircode">
-
-	<div class="container-fluid" ng-controller="eirController">
-		
-		<p>Eircode Search</p>
-		
-		<form class="simple-form">
-			<label>Eircode:</label> <input type="text" ng-model="eircode" />
-			
-			<label>Dataset:</label> 
-			<select name="dataset" ng-model="dataset" >
-				<option value="uk" selected="selected">UK</option>
-				<option value="ie">IE</option>
-			</select>
-			
-			<br/>
-			
-			<input type="button" ng-click="reset()" value="Reset" />
-			<input	type="submit" ng-click="searchEirCode(dataset, eircode)" value="Search" />
-		</form>
-		
-		<hr />
-		
-		<div ng-show="eirResponse.errorMessage" style="background-color: red;">
-			Error: {{ eirResponse.errorMessage }}
-		</div>
-		<div ng-show="eirResponse.alertMessage" style="background-color: yellow;">
-			Alert: {{ eirResponse.alertMessage }}
-		</div>
-		<div ng-show="eirResponse.addressList[0].postcode" style="background-color: cyan">
-			Note: These results are based around the NR14 7PZ postcode when using the example API key (PCW45-12345-12345-1234X).
-		</div>
-		
-		<table ng-show="eirResponse.addressList[0].postcode" class="table-striped">
-			<thead>
-				<tr>
-					<th>address line 1</th>
-					<th>address line 2</th>
-					<th>summary line</th>
-					<th>organisation</th>
-					<th>street</th>
-					<th>posttown</th>
-					<th>county</th>
-					<th>postcode</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="row in eirResponse.addressList">
-					<td>{{ row.addressline1 }}</td>
-					<td>{{ row.addressline2 }}</td>
-					<td>{{ row.summaryline }}</td>
-					<td>{{ row.organisation }}</td>
-					<td>{{ row.street }}</td>
-					<td>{{ row.posttown }}</td>
-					<td>{{ row.county }}</td>
-					<td>{{ row.postcode }}</td>
-				</tr>
-			</tbody>
-		</table>
-		
-	</div>
-
-	<script>
-		angular.module("webappAppEircode", []).controller( "eirController", function($scope, $http) {
-			
-			$scope.searchEirCode = function(dataset, eircode) {
-				$scope.eirResponse = '';
-				
-				var parameters = {ds:dataset,ec:eircode};
-				$url = "/webapp/eircode/search";
-				$http.get($url, {params:parameters}).then(
-					function(response) {
-						$scope.eirResponse = response.data;
-					}
-				);
-		    }
-			
-			$scope.reset = function() {
-					$scope.eircode = '';
-					$scope.eirResponse = '';
-				};
-			});
-	</script>
-
+<body>
+	<a href="/webapp/eircode/">Got to EirCode Test</a>
+	<br/>
+	
 </body>
 </html>

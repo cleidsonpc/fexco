@@ -21,26 +21,25 @@ public class EircodeSearchService {
 	private static final Logger LOG = Logger.getLogger(EircodeSearchService.class);
 	private final static RestTemplate restTemplate = new RestTemplate();
 	
-	@Value("${cleidsonpc.ws.id}")
+	@Value("${params.cleidsonpc.ws.id}")
     private String wsId;
 	
-	private static final String URL_EIR_CODE_SERVICE = "http://ws.postcoder.com/pcw/%s/street/%s/%s?format=json&lines=3";
+	private static final String URL_EIR_CODE_SERVICE = "http://ws.postcoder.com/pcw/%s/street/uk/%s?format=json&lines=3";
 	
 	/**
 	 * Main method to call the web service (ws.postcoder.com) and retrieve the address by eircode.
-	 * @param dataset - ({@link String})
 	 * @param eircode - ({@link String})
 	 * @return The answer with the complete address as JSON 
 	 */
 	@Cacheable("eirCodeCache") // Avoids unnecessary calls to eirCode web service
 	@HystrixCommand(fallbackMethod="errorService")
-	public EircodeServiceResponse searchEirCode(String dataset, String eircode) {
+	public EircodeServiceResponse searchEirCode(String eircode) {
 		
 		LOG.debug("EirCodeSearch.searchEirCode called.");
 		
 		EircodeServiceResponse response = new EircodeServiceResponse();
 		
-		String newEirCodeURL = String.format(URL_EIR_CODE_SERVICE, wsId, dataset, eircode); // Build the URL to the web service of search.
+		String newEirCodeURL = String.format(URL_EIR_CODE_SERVICE, wsId, eircode); // Build the URL to the web service of search.
         Address[] wsRes = restTemplate.getForObject(newEirCodeURL, Address[].class); // Call the ws.postcoder.com web service.
 		response.setAddressList(wsRes);
         
@@ -54,7 +53,7 @@ public class EircodeSearchService {
 	/**
 	 * Method called if the link to the web service ws.postcoder.com is broken.
 	 */
-	public EircodeServiceResponse errorService(@RequestParam("ds") String dataset, @RequestParam("ec") String eircode, Throwable t) {
+	public EircodeServiceResponse errorService(@RequestParam("ec") String eircode, Throwable t) {
 		LOG.error("Hystrix fallbackMethod: " + t.getMessage());
 		
 		EircodeServiceResponse response = new EircodeServiceResponse();
