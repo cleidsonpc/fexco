@@ -73,7 +73,7 @@
 				
 				var parameters = {ec:eircode};
 				
-				$url = "/webapp/eircode/find";
+				$url = "/webapp/eircodes/find";
 				$http.get($url, {params:parameters}).then(
 					function(response) {
 						$scope.eirResponse = response.data;

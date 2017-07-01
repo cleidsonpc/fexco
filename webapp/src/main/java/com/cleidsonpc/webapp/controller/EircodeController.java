@@ -18,7 +18,7 @@ import com.cleidsonpc.webapp.service.EircodeServiceResponse;
  * Class responsible for control the information about eircode search.
  */
 @Controller
-@RequestMapping(value="/webapp/eircode")
+@RequestMapping(value="/webapp/eircodes")
 public class EircodeController {
 
 	private static final Logger LOG = Logger.getLogger(EircodeController.class);
