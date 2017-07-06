@@ -22,7 +22,7 @@ public class Person {
 		
 	}
 	
-	public Person(String name, String address, long phone) {
+	public Person(String name, String address, int phone) {
 		this.name = name;
 		this.address = address;
 		this.phone = phone;

@@ -5,11 +5,17 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<script type="text/javascript" th:src="@{/js/angular.min.js}"></script>
 	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+	<link rel="stylesheet" th:href="@{/css/webapp.css}" />
 </head>
 
 <body ng-app="webappAppEircode">
 
 	<div class="container-fluid" ng-controller="eirController">
+	
+		<div class="webapp-menu">
+			<a class="webapp-menu-item" href="/webapp/home/">Home</a>
+		</div>
+		<hr/>
 		
 		<p>Eircode Search</p>
 		
